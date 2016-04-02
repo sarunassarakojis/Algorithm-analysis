@@ -24,7 +24,7 @@ public interface FileDataManipulator {
 
     void printRandomAccessFileContents() throws IOException;
 
-    void swapElements(int firstValue, int secondValue) throws IOException;
+    void swapElements(int firstValueIndex, int secondValueIndex) throws IOException;
 
     int getSize() throws IOException;
 }

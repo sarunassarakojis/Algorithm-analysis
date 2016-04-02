@@ -68,7 +68,7 @@ public class ArrayTypeFileDataManipulator implements FileDataManipulator {
     }
 
     @Override
-    public void swapElements(int firstValue, int secondValue) throws IOException {
+    public void swapElements(int firstValueIndex, int secondValueIndex) throws IOException {
 
     }
 

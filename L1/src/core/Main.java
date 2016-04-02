@@ -15,12 +15,16 @@ public class Main {
 
         listManipulator.generateRandomAccessFileWithData("text.txt", 5);
         listManipulator.generatePointersFile("pointers.txt");
-        listManipulator.swapElements(1, 3);
-        listManipulator.swapElements(1, 3);
-        int a = listManipulator.convertNodeIndexToFileIndex(0);
-        int b = listManipulator.convertNodeIndexToFileIndex(1);
-        int c = listManipulator.convertNodeIndexToFileIndex(2);
+        int ind1 = listManipulator.convertNodeIndexToFileIndex(0);
+        int ind2 = listManipulator.convertNodeIndexToFileIndex(1);
+
+        listManipulator.swapElements(1, 0);
         listManipulator.printRandomAccessFileContents();
-        sorter.sortList(listManipulator);
+
+        ind1 = listManipulator.convertNodeIndexToFileIndex(0);
+        ind2 = listManipulator.convertNodeIndexToFileIndex(1);
+
+        listManipulator.swapElements(1, 0);
+        listManipulator.printRandomAccessFileContents();
     }
 }

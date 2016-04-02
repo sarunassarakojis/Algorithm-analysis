@@ -216,27 +216,61 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
     }
 
     @Override
-    public void swapElements(int firstValue, int secondValue) throws IOException {
-        int firstValueIndex = getIndexInDataFileFromValue(firstValue);
-        int secondValueIndex = getIndexInDataFileFromValue(secondValue);
+    public void swapElements(int firstValueIndex, int secondValueIndex) throws IOException {
         NodePointerData firstValueData = new NodePointerData(firstValueIndex);
         NodePointerData secondValueData = new NodePointerData(secondValueIndex);
 
         if (Math.abs(firstValueIndex - secondValueIndex) > 1) {
-            readjustPreviousNodesIndexes(firstValueIndex, secondValueData);
-            readjustPreviousNodesIndexes(secondValueIndex, firstValueData);
-            readjustNextNodesIndexes(firstValueIndex, secondValueData);
-            readjustNextNodesIndexes(secondValueIndex, firstValueData);
+            readjustPreviousNodesIndexes(firstValueData, secondValueData);
+            readjustPreviousNodesIndexes(secondValueData, firstValueData);
+            readjustNextNodesIndexes(firstValueData, secondValueData);
+            readjustNextNodesIndexes(secondValueData, firstValueData);
         } else {
+//              if I knew which index is the minimum and which is the maximum there wil be
+//              no need for these checks
+//            TODO do this instead :
+//            int temp1 = firstValueIndex;
+//            int temp2 = secondValueIndex;
+//            firstValueIndex = Math.min(temp1, temp2);
+//            secondValueIndex = Math.max(temp1, temp2);
+
             if (firstValueIndex < secondValueIndex) {
-                readjustPreviousNodesIndexes(firstValueIndex, secondValueData);
-                readjustNextNodesIndexes(secondValueIndex, firstValueData);
-                swapNeighborNodesIndexes(firstValueData, secondValueData);
+                if (firstValueData.getPreviousElementIndex() == secondValueData.getNodeIndex()) {
+                    readjustPreviousNodesIndexes(secondValueData, firstValueData);
+                } else {
+                    readjustPreviousNodesIndexes(firstValueData, secondValueData);
+                }
+
+                if (secondValueData.getNextElementIndex() == firstValueData.getNodeIndex()) {
+                    readjustNextNodesIndexes(firstValueData, secondValueData);
+                } else {
+                    readjustNextNodesIndexes(secondValueData, firstValueData);
+                }
+
+                if (firstValueData.getPreviousElementIndex() == secondValueData.getNodeIndex()) {
+                    swapNeighborNodesIndexes(secondValueData, firstValueData);
+                } else {
+                    swapNeighborNodesIndexes(firstValueData, secondValueData);
+                }
                 return;
             } else {
-                readjustPreviousNodesIndexes(secondValueIndex, firstValueData);
-                readjustNextNodesIndexes(firstValueIndex, secondValueData);
-                swapNeighborNodesIndexes(secondValueData, firstValueData);
+                if (secondValueData.getPreviousElementIndex() == firstValueData.getNodeIndex()) {
+                    readjustPreviousNodesIndexes(firstValueData, secondValueData);
+                } else {
+                    readjustPreviousNodesIndexes(secondValueData, firstValueData);
+                }
+
+                if (firstValueData.getNextElementIndex() == secondValueData.getNodeIndex()) {
+                    readjustNextNodesIndexes(secondValueData, firstValueData);
+                } else {
+                    readjustNextNodesIndexes(firstValueData, secondValueData);
+                }
+
+                if (secondValueData.getPreviousElementIndex() == firstValueData.getNodeIndex()) {
+                    swapNeighborNodesIndexes(firstValueData, secondValueData);
+                } else {
+                    swapNeighborNodesIndexes(secondValueData, firstValueData);
+                }
                 return;
             }
         }
@@ -257,9 +291,9 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         return NULL_POINTER;
     }
 
-    private void readjustPreviousNodesIndexes(int nodeIndex, NodePointerData anotherData) throws IOException {
-        if (nodeIndex - 1 >= 0) {
-            NodePointerData previousNodeData = new NodePointerData(nodeIndex - 1);
+    private void readjustPreviousNodesIndexes(NodePointerData firstData, NodePointerData anotherData) throws IOException {
+        if (firstData.getPreviousElementIndex() != NULL_POINTER) {
+            NodePointerData previousNodeData = new NodePointerData(firstData.getPreviousElementIndex());
 
             previousNodeData.setNextElementIndex(anotherData.getNodeIndex());
         } else {
@@ -270,9 +304,9 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         }
     }
 
-    private void readjustNextNodesIndexes(int nodeIndex, NodePointerData anotherData) throws IOException {
-        if (nodeIndex + 1 < getSize()) {
-            NodePointerData nextNodeData = new NodePointerData(nodeIndex + 1);
+    private void readjustNextNodesIndexes(NodePointerData firstData, NodePointerData anotherData) throws IOException {
+        if (firstData.getNextElementIndex() != NULL_POINTER) {
+            NodePointerData nextNodeData = new NodePointerData(firstData.getNextElementIndex());
 
             nextNodeData.setPreviousElementIndex(anotherData.getNodeIndex());
         }
