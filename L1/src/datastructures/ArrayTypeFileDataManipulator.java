@@ -2,6 +2,8 @@ package datastructures;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 
 /**
  * Project: L1
@@ -24,25 +26,39 @@ public class ArrayTypeFileDataManipulator implements FileDataManipulator {
     }
 
     @Override
+    public RandomAccessFile createNewRandomAccessFile(String fileName) throws IOException {
+        Files.deleteIfExists(FileSystems.getDefault().getPath("./", fileName));
+
+        this.randomAccessFileWithData = new RandomAccessFile(fileName, "rw");
+
+        return this.randomAccessFileWithData;
+    }
+
+    @Override
     public RandomAccessFile getRandomAccessFile() throws IOException {
         return this.randomAccessFileWithData;
     }
 
     @Override
-    public int readIntFromRandomAccessFile(int position) throws IOException {
+    public int getIntFromRandomAccessFile(int position) throws IOException {
         randomAccessFileWithData.seek(position * 4);
 
         return randomAccessFileWithData.readInt();
     }
 
     @Override
-    public void setIntInRandomAccessFile(int position, int newValue) throws IOException {
+    public void addValueToDataFile(int newValue) throws IOException {
+
+    }
+
+    @Override
+    public void addValueToDataFile(int position, int newValue) throws IOException {
         randomAccessFileWithData.seek(position * 4);
         randomAccessFileWithData.writeInt(newValue);
     }
 
     @Override
-    public void printOutRandomAccessFileContents() throws IOException {
+    public void printRandomAccessFileContents() throws IOException {
         randomAccessFileWithData.seek(0);
 
         System.out.println("Array type data manipulator file contents:");

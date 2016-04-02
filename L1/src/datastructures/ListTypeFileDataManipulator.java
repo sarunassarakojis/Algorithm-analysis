@@ -133,32 +133,67 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
     }
 
     @Override
+    public RandomAccessFile createNewRandomAccessFile(String fileName) throws IOException {
+        Files.deleteIfExists(FileSystems.getDefault().getPath("./", fileName));
+
+        this.randomAccessFileWithData = new RandomAccessFile(fileName, "rw");
+
+        return this.randomAccessFileWithData;
+    }
+
+    @Override
     public RandomAccessFile getRandomAccessFile() throws IOException {
         return this.randomAccessFileWithData;
     }
 
     @Override
-    public int readIntFromRandomAccessFile(int position) throws IOException {
+    public int convertNodeIndexToFileIndex(int nodeIndex) throws IOException {
+        if (nodeIndex == 0) {
+            return headNodeIndex;
+        } else {
+            int nodesTraversed = 1;
+            NodePointerData data = new NodePointerData(new NodePointerData(headNodeIndex).getNextElementIndex());
+
+            while (nodesTraversed <= nodeIndex) {
+                if (nodesTraversed++ == nodeIndex) {
+                    return data.getNodeIndex();
+                }
+
+                data = new NodePointerData(data.getNextElementIndex());
+            }
+        }
+
+        return NULL_POINTER;
+    }
+
+    @Override
+    public int getIntFromRandomAccessFile(int position) throws IOException {
         randomAccessFileWithData.seek(position * 4);
 
         return randomAccessFileWithData.readInt();
     }
 
     @Override
-    public void setIntInRandomAccessFile(int position, int newValue) throws IOException {
+    public void addValueToDataFile(int position, int newValue) throws IOException {
         randomAccessFileWithData.seek(position * 4);
         randomAccessFileWithData.writeInt(newValue);
     }
 
     @Override
-    public void printOutRandomAccessFileContents() throws IOException {
+    public void addValueToDataFile(int newValue) throws IOException {
+        randomAccessFileWithData.seek(randomAccessFileWithData.length());
+        randomAccessFileWithData.writeInt(newValue);
+    }
+
+    @Override
+    public void printRandomAccessFileContents() throws IOException {
         List<NodePointerData> listOfNodePointerData = getListOfNodePointerData();
         int nextNode = listOfNodePointerData.get(headNodeIndex).getNextElementIndex();
 
         System.out.println("List file contents:");
-        System.out.println(readIntFromRandomAccessFile(headNodeIndex));
+        System.out.println(getIntFromRandomAccessFile(headNodeIndex));
         while (nextNode != NULL_POINTER) {
-            System.out.println(readIntFromRandomAccessFile(nextNode));
+            System.out.println(getIntFromRandomAccessFile(nextNode));
 
             nextNode = listOfNodePointerData.get(nextNode).getNextElementIndex();
         }
@@ -214,7 +249,7 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         randomAccessFileWithData.seek(0);
         for (long position = 0, length = randomAccessFileWithData.length() / 4; position < length; position++) {
 
-            if (readIntFromRandomAccessFile((int) position) == value) {
+            if (getIntFromRandomAccessFile((int) position) == value) {
                 return (int) position;
             }
         }
