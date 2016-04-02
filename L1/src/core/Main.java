@@ -10,10 +10,10 @@ public class Main {
 
         ListTypeFileDataManipulator listManipulator = new ListTypeFileDataManipulator();
 
-        listManipulator.generateRandomAccessFileWithData("sample.txt", 10000);
+        listManipulator.generateRandomAccessFileWithData("sample.txt", 5);
         listManipulator.generatePointersFile("samplePointers.txt");
         listManipulator.printOutRandomAccessFileContents();
-        listManipulator.swapElements(555, 0);
+        listManipulator.swapElements(1, 0);
         listManipulator.printOutRandomAccessFileContents();
 
     }

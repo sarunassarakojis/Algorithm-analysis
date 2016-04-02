@@ -183,13 +183,39 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         NodePointerData firstValueData = new NodePointerData(firstValueIndex);
         NodePointerData secondValueData = new NodePointerData(secondValueIndex);
 
-        readjustPreviousNodesIndexes(firstValueIndex, secondValueData);
-        readjustPreviousNodesIndexes(secondValueIndex, firstValueData);
+        if (Math.abs(firstValueIndex - secondValueIndex) > 1) {
+            readjustPreviousNodesIndexes(firstValueIndex, secondValueData);
+            readjustPreviousNodesIndexes(secondValueIndex, firstValueData);
+            readjustNextNodesIndexes(firstValueIndex, secondValueData);
+            readjustNextNodesIndexes(secondValueIndex, firstValueData);
+        } else {
+            if (firstValueIndex < secondValueIndex) {
+                readjustPreviousNodesIndexes(firstValueIndex, secondValueData);
+                readjustNextNodesIndexes(secondValueIndex, firstValueData);
+                swapNeighborNodesIndexes(firstValueData, secondValueData);
+                return;
+            } else {
+                readjustPreviousNodesIndexes(secondValueIndex, firstValueData);
+                readjustNextNodesIndexes(firstValueIndex, secondValueData);
+                swapNeighborNodesIndexes(secondValueData, firstValueData);
+                return;
+            }
+        }
 
-        int nextTemp = firstValueData.getNextElementIndex();
-        int prevTemp = firstValueData.getPreviousElementIndex();
-        firstValueData.setNodeIndexes(secondValueData.getNextElementIndex(), secondValueData.getPreviousElementIndex());
-        secondValueData.setNodeIndexes(nextTemp, prevTemp);
+        swapNodesIndexes(firstValueData, secondValueData);
+    }
+
+    private int getIndexInDataFileFromValue(int value) throws IOException {
+
+        randomAccessFileWithData.seek(0);
+        for (long position = 0, length = randomAccessFileWithData.length() / 4; position < length; position++) {
+
+            if (readIntFromRandomAccessFile((int) position) == value) {
+                return (int) position;
+            }
+        }
+
+        return NULL_POINTER;
     }
 
     private void readjustPreviousNodesIndexes(int nodeIndex, NodePointerData anotherData) throws IOException {
@@ -205,17 +231,28 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         }
     }
 
-    private int getIndexInDataFileFromValue(int value) throws IOException {
+    private void readjustNextNodesIndexes(int nodeIndex, NodePointerData anotherData) throws IOException {
+        if (nodeIndex + 1 < getSize()) {
+            NodePointerData nextNodeData = new NodePointerData(nodeIndex + 1);
 
-        randomAccessFileWithData.seek(0);
-        for (long position = 0, length = randomAccessFileWithData.length() / 4; position < length; position++) {
-
-            if (readIntFromRandomAccessFile((int) position) == value) {
-                return (int) position;
-            }
+            nextNodeData.setPreviousElementIndex(anotherData.getNodeIndex());
         }
+    }
 
-        return NULL_POINTER;
+    private void swapNeighborNodesIndexes(NodePointerData data1, NodePointerData data2) throws IOException {
+        int prevTemp = data1.getPreviousElementIndex();
+
+        data1.setPreviousElementIndex(data1.getNextElementIndex());
+        data1.setNextElementIndex(data2.getNextElementIndex());
+        data2.setNextElementIndex(data2.getPreviousElementIndex());
+        data2.setPreviousElementIndex(prevTemp);
+    }
+
+    private void swapNodesIndexes(NodePointerData data1, NodePointerData data2) throws IOException {
+        int nextTemp = data1.getNextElementIndex();
+        int prevTemp = data1.getPreviousElementIndex();
+        data1.setNodeIndexes(data2.getNextElementIndex(), data2.getPreviousElementIndex());
+        data2.setNodeIndexes(nextTemp, prevTemp);
     }
 
     /**

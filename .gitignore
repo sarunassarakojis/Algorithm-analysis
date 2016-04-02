@@ -7,3 +7,5 @@
 *.ear
 
 hs_err_pid*
+
+*.txt
