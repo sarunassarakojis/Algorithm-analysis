@@ -12,8 +12,7 @@ public class Main {
 
         listManipulator.generateRandomAccessFileWithData("sample.txt", 5);
         listManipulator.generatePointersFile("samplePointers.txt");
-        listManipulator.printOutRandomAccessFileContents();
-        listManipulator.swapElements(1, 0);
+        listManipulator.swapElements(1, 3);
         listManipulator.printOutRandomAccessFileContents();
 
     }

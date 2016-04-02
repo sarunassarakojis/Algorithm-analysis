@@ -2,6 +2,8 @@ package datastructures;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.Random;
 
 /**
@@ -15,8 +17,9 @@ class FileDataGenerator {
 
     }
 
-    public static RandomAccessFile generateRandomAccessFileWithData(String fileName, int amountOfData)
-            throws IOException {
+    public static RandomAccessFile generateRandomAccessFileWithData(String fileName, int amountOfData) throws IOException {
+        Files.deleteIfExists(FileSystems.getDefault().getPath("./", fileName));
+
         RandomAccessFile randomAccessFile = new RandomAccessFile(fileName, "rw");
         Random randomNumbers = new Random();
 

@@ -2,6 +2,8 @@ package datastructures;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +94,8 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
 
     @Override
     public RandomAccessFile generatePointersFile(String fileName) throws IOException {
+        Files.deleteIfExists(FileSystems.getDefault().getPath("./", fileName));
+
         RandomAccessFile pointersFile = new RandomAccessFile(fileName, "rw");
         long amountOfData = (randomAccessFileWithData.length() / 2) - 1;
         int nextElementIndex;
