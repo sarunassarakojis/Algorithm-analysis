@@ -300,7 +300,7 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
             int newHeadNode = anotherData.getNodeIndex();
             headNodeIndex = newHeadNode;
 
-            new NodePointerData(0).setNextElementIndex(newHeadNode);
+            new NodePointerData(firstData.getNodeIndex()).setNextElementIndex(newHeadNode);
         }
     }
 
