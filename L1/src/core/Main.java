@@ -13,7 +13,7 @@ public class Main {
         ListTypeFileDataManipulator listManipulator = new ListTypeFileDataManipulator();
         FileDataSorter sorter = BucketSort.getInstance();
 
-        listManipulator.generateRandomAccessFileWithData("text.txt", 99);
+        listManipulator.generateRandomAccessFileWithData("text.txt", 400);
         listManipulator.generatePointersFile("pointers.txt");
         listManipulator.printRandomAccessFileContents();
         sorter.sortList(listManipulator);

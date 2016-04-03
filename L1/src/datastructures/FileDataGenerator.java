@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 class FileDataGenerator {
 
     private static final int LOWER_RANGE = 0;
-    private static final int UPPER_RANGE = 100;
+    private static final int UPPER_RANGE = 1000;
 
     private FileDataGenerator() {
 
@@ -38,6 +38,11 @@ class FileDataGenerator {
     }
 
     private static List<Integer> generateValuesArray(int amountOfData) {
+        if (amountOfData > UPPER_RANGE) {
+            throw new IllegalArgumentException("Amount of data to generate should be below upper bound, that is: " +
+                    UPPER_RANGE + ", passed in value: " + amountOfData);
+        }
+
         List<Integer> values = IntStream.range(LOWER_RANGE, UPPER_RANGE)
                 .boxed()
                 .collect(Collectors.toCollection(ArrayList::new));
