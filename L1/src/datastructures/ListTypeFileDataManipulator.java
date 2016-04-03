@@ -216,11 +216,22 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
     }
 
     @Override
+    public String toString() {
+        try {
+            return "Head node index --> " + headNodeIndex + ", size: " + getSize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return super.toString();
+    }
+
+    @Override
     public void swapElements(int firstValueIndex, int secondValueIndex) throws IOException {
         NodePointerData firstValueData = new NodePointerData(firstValueIndex);
         NodePointerData secondValueData = new NodePointerData(secondValueIndex);
 
-        if (Math.abs(firstValueIndex - secondValueIndex) > 1) {
+        if (!areNodesAdjacent(firstValueData, secondValueData)) {
             readjustPreviousNodesIndexes(firstValueData, secondValueData);
             readjustPreviousNodesIndexes(secondValueData, firstValueData);
             readjustNextNodesIndexes(firstValueData, secondValueData);
@@ -276,6 +287,12 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         }
 
         swapNodesIndexes(firstValueData, secondValueData);
+    }
+
+    private boolean areNodesAdjacent(NodePointerData data1, NodePointerData data2) {
+        return data1.getPreviousElementIndex() == data2.getNodeIndex()
+                || data1.getNextElementIndex() == data2.getNodeIndex();
+
     }
 
     private int getIndexInDataFileFromValue(int value) throws IOException {

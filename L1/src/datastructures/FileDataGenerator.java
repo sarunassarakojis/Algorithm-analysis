@@ -24,8 +24,7 @@ class FileDataGenerator {
         Random randomNumbers = new Random();
 
         for (int i = 0; i < amountOfData; i++) {
-            //randomAccessFile.writeInt(randomNumbers.nextInt());
-            randomAccessFile.writeInt(i);
+            randomAccessFile.writeInt(randomNumbers.nextInt(100));
         }
 
         return randomAccessFile;

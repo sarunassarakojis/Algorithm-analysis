@@ -13,18 +13,10 @@ public class Main {
         ListTypeFileDataManipulator listManipulator = new ListTypeFileDataManipulator();
         FileDataSorter sorter = BucketSort.getInstance();
 
-        listManipulator.generateRandomAccessFileWithData("text.txt", 5);
+        listManipulator.generateRandomAccessFileWithData("text.txt", 20);
         listManipulator.generatePointersFile("pointers.txt");
-        int ind1 = listManipulator.convertNodeIndexToFileIndex(0);
-        int ind2 = listManipulator.convertNodeIndexToFileIndex(1);
-
-        listManipulator.swapElements(1, 0);
         listManipulator.printRandomAccessFileContents();
-
-        ind1 = listManipulator.convertNodeIndexToFileIndex(0);
-        ind2 = listManipulator.convertNodeIndexToFileIndex(1);
-
-        listManipulator.swapElements(1, 0);
+        sorter.sortList(listManipulator);
         listManipulator.printRandomAccessFileContents();
     }
 }
