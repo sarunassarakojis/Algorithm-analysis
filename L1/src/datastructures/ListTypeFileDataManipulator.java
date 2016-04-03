@@ -101,6 +101,7 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         int nextElementIndex;
         int previousElementIndex = 0;
         this.pointersFile = pointersFile;
+        this.headNodeIndex = 0;
 
         pointersFile.writeInt(NULL_POINTER);
 
