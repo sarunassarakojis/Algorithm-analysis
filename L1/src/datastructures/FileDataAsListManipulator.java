@@ -10,13 +10,9 @@ import java.io.RandomAccessFile;
  */
 public interface FileDataAsListManipulator extends FileDataManipulator {
 
-    int NULL_POINTER = Integer.MAX_VALUE;
-
     RandomAccessFile generatePointersFile(String fileName) throws IOException;
 
     RandomAccessFile getPointersFile();
 
     int convertNodeIndexToFileIndex(int nodeIndex) throws IOException;
-
-    int getIndexInDataFileFromValue(int value) throws IOException;
 }

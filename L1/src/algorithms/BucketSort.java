@@ -1,5 +1,6 @@
 package algorithms;
 
+import datastructures.ArrayTypeFileDataManipulator;
 import datastructures.FileDataAsListManipulator;
 import datastructures.FileDataManipulator;
 import datastructures.ListTypeFileDataManipulator;
@@ -67,13 +68,13 @@ public class BucketSort implements FileDataSorter {
         }
     }
 
-    private Pair getMinAndMaxValues(FileDataAsListManipulator listManipulator) throws IOException {
-        int firstInt = listManipulator.getIntFromRandomAccessFile(0);
+    private Pair getMinAndMaxValues(FileDataManipulator dataManipulator) throws IOException {
+        int firstInt = dataManipulator.getIntFromRandomAccessFile(0);
         int minValue = firstInt;
         int maxValue = firstInt;
 
-        for (int i = 0, size = listManipulator.getSize(); i < size; i++) {
-            int current = listManipulator.getIntFromRandomAccessFile(i);
+        for (int i = 0, size = dataManipulator.getSize(); i < size; i++) {
+            int current = dataManipulator.getIntFromRandomAccessFile(i);
 
             if (current < minValue) {
                 minValue = current;
@@ -110,7 +111,7 @@ public class BucketSort implements FileDataSorter {
     }
 
     private int mergeBucketOntoMainList(FileDataAsListManipulator mainList, FileDataAsListManipulator bucket,
-                                         int mainFileOffset) throws IOException {
+                                        int mainFileOffset) throws IOException {
         int bucketSize = bucket.getSize();
 
         if (bucketSize != 0) {
@@ -132,7 +133,61 @@ public class BucketSort implements FileDataSorter {
     }
 
     @Override
-    public void sortArray(FileDataManipulator arrayManipulator) throws IOException {
+    public void sortArray(FileDataManipulator dataManipulator) throws IOException {
+        Pair minAndMax = getMinAndMaxValues(dataManipulator);
+        int minValue = minAndMax.getFirstNumber();
+        int maxValue = minAndMax.getSecondNumber();
+        int bucketCount = (maxValue - minValue) / DEFAULT_BUCKET_SIZE + 1;
+        int mainFileOffset = 0;
+        List<FileDataManipulator> buckets = getListOfInitializedArrayBuckets(bucketCount);
 
+        distributeValuesToBuckets(dataManipulator, buckets, minValue);
+        for (int bucketIndex = 0; bucketIndex < bucketCount; bucketIndex++) {
+            FileDataManipulator bucket = buckets.get(bucketIndex);
+
+            SelectionSort.getInstance().sortArray(bucket);
+            mainFileOffset = mergeBucketOntoMainList(dataManipulator, bucket, mainFileOffset);
+        }
+    }
+
+    private List<FileDataManipulator> getListOfInitializedArrayBuckets(int bucketCount) throws IOException {
+        List<FileDataManipulator> buckets = new ArrayList<>(bucketCount);
+
+        for (int i = 0; i < bucketCount; i++) {
+            FileDataManipulator bucket = new ArrayTypeFileDataManipulator();
+
+            bucket.createNewRandomAccessFile("arr" + i + ".txt");
+            buckets.add(bucket);
+        }
+
+        return buckets;
+    }
+
+    private void distributeValuesToBuckets(FileDataManipulator listManipulator,
+                                           List<FileDataManipulator> buckets, int minValue) throws IOException {
+        for (int i = 0, size = listManipulator.getSize(); i < size; i++) {
+            int value = listManipulator.getIntFromRandomAccessFile(i);
+
+            buckets.get((value - minValue) / DEFAULT_BUCKET_SIZE).addValueToDataFile(value);
+        }
+    }
+
+    private int mergeBucketOntoMainList(FileDataManipulator mainList, FileDataManipulator bucket,
+                                        int mainFileOffset) throws IOException {
+        int bucketSize = bucket.getSize();
+
+        if (bucketSize != 0) {
+            for (int i = 0; i < bucketSize; i++) {
+                int bucketElement = bucket.getIntFromRandomAccessFile(i);
+                int mainFileElement = mainList.getIntFromRandomAccessFile(mainFileOffset);
+
+                if (bucketElement != mainFileElement) {
+                    mainList.addValueToDataFile(mainFileOffset, bucketElement);
+                }
+                mainFileOffset++;
+            }
+        }
+
+        return mainFileOffset;
     }
 }

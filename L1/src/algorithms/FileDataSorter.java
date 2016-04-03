@@ -14,5 +14,5 @@ public interface FileDataSorter {
 
     void sortList(FileDataAsListManipulator listManipulator) throws IOException;
 
-    void sortArray(FileDataManipulator arrayManipulator) throws IOException;
+    void sortArray(FileDataManipulator dataManipulator) throws IOException;
 }

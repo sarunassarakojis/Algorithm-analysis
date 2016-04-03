@@ -347,19 +347,4 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
         data2.setNodeIndexes(nextTemp, prevTemp);
     }
 
-    /**
-     * Method used mainly for debugging.
-     *
-     * @throws IOException
-     */
-    @Deprecated
-    private void printOutPointersFile() throws IOException {
-        pointersFile.seek(0);
-
-        System.out.println("Pointers file contents:");
-        for (long i = 0, length = pointersFile.length() / 4; i < length; i++) {
-            System.out.println(pointersFile.readInt());
-        }
-    }
-
 }

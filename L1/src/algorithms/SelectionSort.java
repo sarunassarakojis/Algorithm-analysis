@@ -48,7 +48,23 @@ public class SelectionSort implements FileDataSorter {
     }
 
     @Override
-    public void sortArray(FileDataManipulator arrayManipulator) throws IOException {
+    public void sortArray(FileDataManipulator dataManipulator) throws IOException {
+        int size = dataManipulator.getSize();
 
+        for (int currentIndex = 0; currentIndex < size; currentIndex++) {
+            int minIndex = currentIndex;
+
+            for (int j = currentIndex + 1; j < size; j++) {
+
+                if (dataManipulator.getIntFromRandomAccessFile(j) <
+                        dataManipulator.getIntFromRandomAccessFile(minIndex)) {
+                    minIndex = j;
+                }
+            }
+
+            if (currentIndex != minIndex) {
+                dataManipulator.swapElements(currentIndex, minIndex);
+            }
+        }
     }
 }

@@ -10,6 +10,8 @@ import java.io.RandomAccessFile;
  */
 public interface FileDataManipulator {
 
+    int NULL_POINTER = Integer.MAX_VALUE;
+
     RandomAccessFile generateRandomAccessFileWithData(String fileName, int amountOfData) throws IOException;
 
     RandomAccessFile createNewRandomAccessFile(String fileName) throws IOException;
@@ -23,6 +25,8 @@ public interface FileDataManipulator {
     void addValueToDataFile(int position, int newValue) throws IOException;
 
     void printRandomAccessFileContents() throws IOException;
+
+    int getIndexInDataFileFromValue(int value) throws IOException;
 
     void swapElements(int firstValueIndex, int secondValueIndex) throws IOException;
 
