@@ -295,10 +295,11 @@ public class ListTypeFileDataManipulator implements FileDataAsListManipulator {
 
     }
 
-    private int getIndexInDataFileFromValue(int value) throws IOException {
+    @Override
+    public int getIndexInDataFileFromValue(int value) throws IOException {
 
         randomAccessFileWithData.seek(0);
-        for (long position = 0, length = randomAccessFileWithData.length() / 4; position < length; position++) {
+        for (long position = 0, length = getSize(); position < length; position++) {
 
             if (getIntFromRandomAccessFile((int) position) == value) {
                 return (int) position;

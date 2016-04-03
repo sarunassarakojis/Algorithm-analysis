@@ -54,6 +54,7 @@ public class BucketSort implements FileDataSorter {
         int minValue = minAndMax.getFirstNumber();
         int maxValue = minAndMax.getSecondNumber();
         int bucketCount = (maxValue - minValue) / DEFAULT_BUCKET_SIZE + 1;
+        int mainFileOffset = 0;
         List<FileDataAsListManipulator> buckets = getListOfInitializedBuckets(bucketCount);
 
         distributeValuesToBuckets(listManipulator, buckets, minValue);
@@ -62,6 +63,7 @@ public class BucketSort implements FileDataSorter {
 
             bucket.generatePointersFile("pointers" + bucketIndex + ".txt");
             SelectionSort.getInstance().sortList(bucket);
+            mainFileOffset = mergeBucketOntoMainList(listManipulator, bucket, mainFileOffset);
         }
     }
 
@@ -107,15 +109,26 @@ public class BucketSort implements FileDataSorter {
         }
     }
 
-    private void mergeBucketOntoMainList(FileDataAsListManipulator listManipulator, FileDataAsListManipulator bucket)
-            throws IOException {
+    private int mergeBucketOntoMainList(FileDataAsListManipulator mainList, FileDataAsListManipulator bucket,
+                                         int mainFileOffset) throws IOException {
         int bucketSize = bucket.getSize();
 
         if (bucketSize != 0) {
             for (int i = 0; i < bucketSize; i++) {
+                int bucketElement = bucket.getIntFromRandomAccessFile(bucket.convertNodeIndexToFileIndex(i));
+                int positionInMainFile = mainList.convertNodeIndexToFileIndex(mainFileOffset);
+                int mainFileElement = mainList.getIntFromRandomAccessFile(positionInMainFile);
 
+                if (bucketElement != mainFileElement) {
+                    int index = mainList.getIndexInDataFileFromValue(bucketElement);
+
+                    mainList.swapElements(positionInMainFile, index);
+                }
+                mainFileOffset++;
             }
         }
+
+        return mainFileOffset;
     }
 
     @Override

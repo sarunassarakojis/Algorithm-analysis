@@ -17,4 +17,6 @@ public interface FileDataAsListManipulator extends FileDataManipulator {
     RandomAccessFile getPointersFile();
 
     int convertNodeIndexToFileIndex(int nodeIndex) throws IOException;
+
+    int getIndexInDataFileFromValue(int value) throws IOException;
 }
