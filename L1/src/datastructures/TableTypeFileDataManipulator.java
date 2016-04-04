@@ -27,7 +27,7 @@ public class TableTypeFileDataManipulator implements FileDataManipulator {
     }
 
     public void searchForSameNames() throws IOException {
-        MyMap<String, String> names = new MyMap<>(1000, HashType.JCF8);
+        MyMap<String, String> names = new MyMap<>(10000, HashType.JCF8);
         String line;
 
         randomAccessFileWithData.seek(0);

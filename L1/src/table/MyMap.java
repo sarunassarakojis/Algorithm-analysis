@@ -144,7 +144,7 @@ public class MyMap<K, V> implements MapADTp<K, V> {
                     }
                 }
 
-                if (toAdd && key.equals(table[index])) {
+                if (toAdd && key.equals(table[index].key)) {
                     conflictingNames.seek(conflictingNames.length());
                     String s = ((String) key).replaceAll("\u0000", "");
                     conflictingNames.writeChars(s + "\n");
