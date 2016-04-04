@@ -44,7 +44,7 @@ public class ArrayTypeFileDataManipulator implements FileDataManipulator, Revers
 
     @Override
     public RandomAccessFile generateRandomAccessFileWithData(String fileName, int amountOfData) throws IOException {
-        this.randomAccessFileWithData = FileDataGenerator.generateRandomAccessFileWithData(fileName, amountOfData);
+        this.randomAccessFileWithData = FileDataGenerator.generateRandomAccessFileWithIntegerData(fileName, amountOfData);
 
         return this.randomAccessFileWithData;
     }
@@ -55,11 +55,6 @@ public class ArrayTypeFileDataManipulator implements FileDataManipulator, Revers
 
         this.randomAccessFileWithData = new RandomAccessFile(fileName, "rw");
 
-        return this.randomAccessFileWithData;
-    }
-
-    @Override
-    public RandomAccessFile getRandomAccessFile() throws IOException {
         return this.randomAccessFileWithData;
     }
 

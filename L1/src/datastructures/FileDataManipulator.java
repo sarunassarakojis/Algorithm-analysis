@@ -16,8 +16,6 @@ public interface FileDataManipulator {
 
     RandomAccessFile createNewRandomAccessFile(String fileName) throws IOException;
 
-    RandomAccessFile getRandomAccessFile() throws IOException;
-
     int getIntFromRandomAccessFile(int position) throws IOException;
 
     void addValueToDataFile(int newValue) throws IOException;

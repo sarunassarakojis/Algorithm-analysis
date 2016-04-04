@@ -3,6 +3,7 @@ package core;
 import algorithms.BucketSort;
 import algorithms.FileDataSorter;
 import datastructures.ArrayTypeFileDataManipulator;
+import datastructures.TableTypeFileDataManipulator;
 
 import java.io.IOException;
 
@@ -21,14 +22,19 @@ public class Main {
         listManipulator.generatePointersFile("pointersX.txt");
         listManipulator.printRandomAccessFileContents();*/
 
-        ArrayTypeFileDataManipulator manipulator = new ArrayTypeFileDataManipulator();
+        /*ArrayTypeFileDataManipulator manipulator = new ArrayTypeFileDataManipulator();
         FileDataSorter sorter = BucketSort.getInstance();
 
-        manipulator.generateRandomAccessFileWithData("array.txt", 5);
+        manipulator.generateRandomAccessFileWithData("array.txt", 50);
         manipulator.printRandomAccessFileContents();
         sorter.sortArray(manipulator);
         manipulator.printRandomAccessFileContents();
         manipulator.undo();
-        manipulator.printRandomAccessFileContents();
+        manipulator.printRandomAccessFileContents();*/
+
+        TableTypeFileDataManipulator table = new TableTypeFileDataManipulator();
+
+        table.generateRandomAccessFileWithData("table.txt", 3);
+        table.printRandomAccessFileContents();
     }
 }
