@@ -3,12 +3,11 @@ package table;
 import javax.swing.JTextArea;
 
 /**
- * @author eimutis
+ *
  */
 public class Timekeeper {
 
     int[] tyrimoImtis;
-    private final JTextArea ta;
     private long startTime, finishTime;
     private final long startTimeTot;
     private long finishTimeTot;
@@ -26,9 +25,8 @@ public class Timekeeper {
     private final String kiekioFormatas = "%8d(%2d) ";
     private String antraštė = "  kiekis(*k) ";
 
-    public Timekeeper(int[] kiekiai, JTextArea ta) {
+    public Timekeeper(int[] kiekiai) {
         this.tyrimoImtis = kiekiai;
-        this.ta = ta;
         kiekioN = tyrimoImtis.length;
         laikai = new double[kiekioN][tyrimųNmax];
         startTimeTot = System.nanoTime();
@@ -36,11 +34,6 @@ public class Timekeeper {
 
     public void start() {
         tyrimoInd = 0;
-
-        if (kiekioInd >= kiekioN) {
-            ta.append("Duomenų kiekis keičiamas daugiau kartų nei buvo planuota");
-            // System.exit(0);
-        }
 
         tyrimųEilutė = String.format(kiekioFormatas, tyrimoImtis[kiekioInd],
                 tyrimoImtis[kiekioInd] / tyrimoImtis[0]);
@@ -62,18 +55,8 @@ public class Timekeeper {
         double t1 = (finishTime - startTime) / 1e9;
         sumTime += t1;
 
-        if (startTime == 0) {
-            ta.append("Metodas finish panaudotas be start metodo !!!" + System.lineSeparator());
-            //   System.exit(0);
-        }
-
         if (kiekioInd == 0) {
             antraštė += String.format(vardoFormatas, vardas);
-        }
-
-        if (tyrimoInd >= tyrimųNmax) {
-            ta.append("Jau atlikta daugiau tyrimų nei numatyta  !!!" + System.lineSeparator());
-            //  System.exit(0);
         }
 
         laikai[kiekioInd][tyrimoInd++] = t1;
@@ -85,11 +68,6 @@ public class Timekeeper {
     }
 
     public void seriesFinish() {
-        if (kiekioInd == 0) {
-            ta.append(antraštė + System.lineSeparator());
-        }
-
-        ta.append(tyrimųEilutė + System.lineSeparator());
         kiekioInd++;
         tyrimųN = tyrimoInd;
 
@@ -101,13 +79,6 @@ public class Timekeeper {
     private void summary() {
         finishTimeTot = System.nanoTime();
         double totTime = (finishTimeTot - startTimeTot) / 1e9;
-        ta.append(String.format("       Bendras tyrimo laikas %8.3f sekundžių", totTime) + System.lineSeparator());
-        ta.append(String.format("    Išmatuotas tyrimo laikas %8.3f sekundžių", sumTime) + System.lineSeparator());
-        ta.append(String.format("    t.y. %5.1f%% sudaro pagalbiniai darbai",
-                (totTime - sumTime) / totTime * 100) + System.lineSeparator());
-        ta.append(System.lineSeparator());
-        ta.append("Normalizuota (santykinė) laikų lentelė" + System.lineSeparator());
-        ta.append(antraštė + System.lineSeparator());
         double d1 = laikai[0][0];
         for (int i = 0; i < kiekioN; i++) {
             tyrimųEilutė = String.format(kiekioFormatas, tyrimoImtis[i],
@@ -115,8 +86,6 @@ public class Timekeeper {
             for (int j = 0; j < tyrimųN; j++) {
                 tyrimųEilutė += String.format(normFormatas, laikai[i][j] / d1);
             }
-            ta.append(tyrimųEilutė + System.lineSeparator());
         }
-        ta.append(System.lineSeparator());
     }
 }

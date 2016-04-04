@@ -4,6 +4,7 @@ import algorithms.BucketSort;
 import algorithms.FileDataSorter;
 import datastructures.ArrayTypeFileDataManipulator;
 import datastructures.TableTypeFileDataManipulator;
+import table.Timekeeper;
 
 import java.io.IOException;
 
@@ -34,7 +35,8 @@ public class Main {
 
         TableTypeFileDataManipulator table = new TableTypeFileDataManipulator();
 
-        table.generateRandomAccessFileWithData("table.txt", 3);
+        table.generateRandomAccessFileWithData("table.txt", 100);
         table.printRandomAccessFileContents();
+        table.searchForSameNames();
     }
 }

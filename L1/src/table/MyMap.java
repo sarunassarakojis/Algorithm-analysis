@@ -1,8 +1,11 @@
 package table;
 
-import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -17,8 +20,8 @@ public class MyMap<K, V> implements MapADTp<K, V> {
     public static final float DEFAULT_LOAD_FACTOR = 0.75f;
     public static final HashType DEFAULT_HASH_TYPE = HashType.DIVISION;
 
+    private RandomAccessFile conflictingNames;
     protected Node<K, V>[] table;
-    private List<K> conflictingNames;
     protected int size = 0;
     protected float loadFactor;
     protected HashType hashType;
@@ -55,11 +58,23 @@ public class MyMap<K, V> implements MapADTp<K, V> {
         this.table = new Node[initialCapacity];
         this.loadFactor = loadFactor;
         this.hashType = hashType;
-        this.conflictingNames = new ArrayList<>();
+        try {
+            Files.deleteIfExists(FileSystems.getDefault().getPath("./", "conf.txt"));
+
+            this.conflictingNames = new RandomAccessFile("conf.txt", "rw");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public List<K> getConflictingNames() {
-        return conflictingNames;
+    public void printConflictingNames() throws IOException {
+        String line;
+
+        System.out.println("Same names :");
+        conflictingNames.seek(0);
+        while ((line = conflictingNames.readLine()) != null) {
+            System.out.println(line);
+        }
     }
 
     @Override
@@ -116,10 +131,31 @@ public class MyMap<K, V> implements MapADTp<K, V> {
         if (table[index] == null) {
             table[index] = node;
         } else {
-            conflictingNames.add(key);
+            String line;
+            boolean toAdd = true;
+
+            try {
+                conflictingNames.seek(0);
+
+                while ((line = conflictingNames.readLine()) != null) {
+                    if (line.equals(key)) {
+                        toAdd = false;
+                        break;
+                    }
+                }
+
+                if (toAdd && key.equals(table[index])) {
+                    conflictingNames.seek(conflictingNames.length());
+                    String s = ((String) key).replaceAll("\u0000", "");
+                    conflictingNames.writeChars(s + "\n");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
 
             for (int i = 1; i < size; i++) {
-                int newIndex = (index + i) % size;
+                int newIndex = (index + i * i) % size;
                 if (table[newIndex] == null) {
                     table[newIndex] = node;
                     break;

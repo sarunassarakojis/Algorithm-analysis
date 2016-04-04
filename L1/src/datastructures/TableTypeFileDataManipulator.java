@@ -1,7 +1,6 @@
 package datastructures;
 
-import table.MapKTU;
-import table.MapKTUx;
+import table.HashType;
 import table.MyMap;
 
 import java.io.IOException;
@@ -28,13 +27,15 @@ public class TableTypeFileDataManipulator implements FileDataManipulator {
     }
 
     public void searchForSameNames() throws IOException {
-        MyMap<String, String> names = new MyMap<>();
+        MyMap<String, String> names = new MyMap<>(1000, HashType.JCF8);
         String line;
 
         randomAccessFileWithData.seek(0);
         while ((line = randomAccessFileWithData.readLine()) != null) {
             names.put(line, line);
         }
+
+        names.printConflictingNames();
     }
 
     @Override
