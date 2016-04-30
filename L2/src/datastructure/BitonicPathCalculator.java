@@ -11,7 +11,6 @@ import java.util.List;
  */
 public class BitonicPathCalculator {
 
-    private static double[][] bitonicLengths;
     private static final int UNDEFINED = -1;
 
     public static List<Point> getListOfSortedPoints(Point... points) {
@@ -28,7 +27,7 @@ public class BitonicPathCalculator {
      *               more formally: <code>p1.x <= p2.x <= p3.x <= ..... pn.x</code>
      */
     public static double calculateBitonicPath(List<Point> points) {
-        bitonicLengths = new double[points.size()][points.size()];
+        double[][] bitonicLengths = new double[points.size()][points.size()];
         bitonicLengths[0][0] = 0;
         bitonicLengths[0][1] = points.get(0).getDistanceToPoint(points.get(1));
 
