@@ -1,5 +1,5 @@
-import datastructure.BitonicPathCalculator;
-import datastructure.Point;
+import utility.BitonicPathCalculator;
+import utility.Point;
 import org.junit.Test;
 
 import java.util.List;

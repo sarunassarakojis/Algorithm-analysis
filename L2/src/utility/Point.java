@@ -1,4 +1,4 @@
-package datastructure;
+package utility;
 
 /**
  * A {@link Point} represents a <em>city</em> when this class used
