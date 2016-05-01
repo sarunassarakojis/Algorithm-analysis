@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class PointGenerator {
 
     private static final int LOWER_RANGE = 0;
-    private static final int UPPER_RANGE = 1000;
+    private static final int UPPER_RANGE = 100000;
 
     private PointGenerator() {
         /*
@@ -23,7 +23,7 @@ public class PointGenerator {
          */
     }
 
-    public static List<Point> getListOfRandomPoints(int amountOfData) {
+    public static List<Point> getListOfRandomGeneratedPoints(int amountOfData) {
         List<Integer> xCoordinates = getListOfIntegerData(amountOfData);
         List<Integer> yCoordinates = getListOfIntegerData(amountOfData);
         List<Point> points = new ArrayList<>(amountOfData);
