@@ -15,7 +15,7 @@ import java.util.List;
 public class ApplicationRunner {
 
     public static void main(String[] args) {
-        int[] amounts = {1000, 2000, 3000, 4000, 5000, 6000, 7000};
+        int[] amounts = {1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000};
         long[][] results = new long[amounts.length][];
 
         for (int i = 0; i < amounts.length; i++) {
@@ -23,7 +23,7 @@ public class ApplicationRunner {
             long t1 = System.currentTimeMillis();
 
             Collections.sort(points);
-            BitonicPathCalculator.calculateBitonicPath(points);
+            double bitonicPath = BitonicPathCalculator.calculateBitonicPath(points);
 
             long t2 = System.currentTimeMillis();
             results[i] = new long[]{amounts[i], t2 - t1};
